@@ -24,12 +24,12 @@ import javax.servlet.http.Part;
 
 /** Sample servlet for uploading files to server and show them
  *
- *  Requires an images folder under TOMCAT_DIR/webapps/ for uploading and showing images-
+ * @note Requires an images folder under TOMCAT_DIR/webapps/ for uploading and showing images-
  *
  * @author jrbalsas
  */
 @WebServlet(name = "ImageUploadServletCtrl", urlPatterns = {"/image"})
-@MultipartConfig
+@MultipartConfig(maxFileSize = 1024*1024*5) //Max upload file size 5MB
 public class ImageUploadServletCtrl extends HttpServlet {
 
     private final String viewPath="/WEB-INF/image/";
