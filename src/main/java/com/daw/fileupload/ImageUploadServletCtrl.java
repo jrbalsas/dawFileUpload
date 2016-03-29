@@ -8,8 +8,9 @@ package com.daw.fileupload;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -21,7 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-/**
+/** Sample servlet for uploading files to server and show them
+ *
+ *  Requires an images folder under TOMCAT_DIR/webapps/ for uploading and showing images-
  *
  * @author jrbalsas
  */
@@ -30,6 +33,8 @@ import javax.servlet.http.Part;
 public class ImageUploadServletCtrl extends HttpServlet {
 
     private final String viewPath="/WEB-INF/image/";
+
+    private final String imagesUrl="/images";  //Container public url for uploaded images p.e. http://localhost:8080/images
     private String imagePath=""; //enter the folder absolute path in server
     private File imageFolder=null;
     private Logger Log;
@@ -37,15 +42,15 @@ public class ImageUploadServletCtrl extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        super.init(); //To change body of generated methods, choose Tools | Templates.
+        super.init();
         
         Log = Logger.getLogger(ImageUploadServletCtrl.class.getName());
         
         //By default, place upload images in root context location http://host:8080/images/
-        //Only in Tomcat container
+        //Only for Tomcat container
         if (imagePath.equals("")) {
             //TODO, check upload folder or create it if needed
-            imagePath=System.getProperty("catalina.base")+"/webapps/images";                      
+            imagePath=System.getProperty("catalina.base")+"/webapps"+imagesUrl;                      
         }
         Log.log(Level.INFO, "Image upload path: {0}", imagePath);
         //Open upload folder
@@ -79,8 +84,11 @@ public class ImageUploadServletCtrl extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
 
-        //TODO, list files in view
-
+        //Get available images files and send to view for listing
+        request.setAttribute("images", getImageFileNames());
+        //Pass to view public URL for uploaded images 
+        request.setAttribute("imagesUrl", imagesUrl);
+        
         RequestDispatcher rd=request.getRequestDispatcher(viewPath+"/send.jsp");
         rd.forward(request, response);
     }
@@ -110,9 +118,21 @@ public class ImageUploadServletCtrl extends HttpServlet {
 
             }
         }
-        response.sendRedirect("");
+        response.sendRedirect("image");
     }
 
+    /** Get uploaded file names*/
+    private List<String> getImageFileNames() {
+        List<String> fileNames=new ArrayList<>();
+        File[] fList = imageFolder.listFiles();
+        for (File file : fList){
+            if (file.isFile()){
+                fileNames.add(file.getName());
+            }
+        }
+        return fileNames;
+    }
+            
     /**
      * Returns a short description of the servlet.
      *
@@ -120,6 +140,6 @@ public class ImageUploadServletCtrl extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Sample servlet for uploading an showing images";
     }
 }
