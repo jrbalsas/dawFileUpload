@@ -1,9 +1,9 @@
 <%-- 
     Document   : send
-    Created on : 29-mar-2016, 19:36:34
-    Author     : jrbalsas
+    Author     : jrbalsas@ujaen.es
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,14 +13,17 @@
     </head>
     <body>
         <h1>Upload file</h1>
-        <form method="POST" enctype="multipart/form-data">
-            <input type="file" name="fileParam">
-            <input type="submit" name="Send">
-        </form>
-        <h2>Available images</h2>
 
-        <c:forEach var="imageName" items="${images}" >
-            <p>${imageName}<img alt="${imageName}" src="${imagesUrl}/${imageName}"/></p>
-        </c:forEach>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="file" name="fileParam">
+                <input type="submit" name="Send">
+            </form>
+            <h2>Available images in Folder ${imagesPath}</h2>
+
+            <c:forEach var="imageName" items="${images}" >
+                <p>Url: <c:url value='${imagesUrl}/${imageName}'/></p>
+                <img alt="${imageName}" src="<c:url value='${imagesUrl}/${imageName}'/>">
+            </c:forEach>
+
     </body>
 </html>

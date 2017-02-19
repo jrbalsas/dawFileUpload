@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.daw.fileupload;
 
 import java.io.File;
@@ -24,37 +19,34 @@ import javax.servlet.http.Part;
 
 /** Sample servlet for uploading files to server and show them
  *
- * @note Requires an images folder under TOMCAT_DIR/webapps/ for uploading and showing images-
+ * @note Requires an images on filesystem for uploading and showing images (see context.xml)
  *
- * @author jrbalsas
+ * @author jrbalsas@ujaen.es
  */
 @WebServlet(name = "ImageUploadServletCtrl", urlPatterns = {"/image"})
 @MultipartConfig(maxFileSize = 1024*1024*5) //Max upload file size 5MB
 public class ImageUploadServletCtrl extends HttpServlet {
 
-    private final String viewPath="/WEB-INF/image/";
+    private final String viewPath="/WEB-INF/image/"; //Servlet templates folder
 
-    private final String imagesUrl="/images";  //Container public url for uploaded images p.e. http://localhost:8080/images
-    private String imagePath=""; //enter the folder absolute path in server
+    //Images filesystem path and URL as defined in META-INF/context.xml
+    private final String imagePath="/tmp/images";   //enter the folder absolute path in server filesystem
+    private final String imagesUrl="/images";       //Images public URL 
+                                                     
     private File imageFolder=null;
     private Logger Log;
-
 
     @Override
     public void init() throws ServletException {
         super.init();
         
         Log = Logger.getLogger(ImageUploadServletCtrl.class.getName());
-        
-        //By default, place upload images in root context location http://host:8080/images/
-        //Only for Tomcat container
-        if (imagePath.equals("")) {
-            //TODO, check upload folder or create it if needed
-            imagePath=System.getProperty("catalina.base")+"/webapps"+imagesUrl;                      
-        }
-        Log.log(Level.INFO, "Image upload path: {0}", imagePath);
+                
         //Open upload folder
         imageFolder=new File(imagePath);
+
+        Log.log(Level.INFO, "Image upload path: {0}", imagePath);        
+        
     }
     
     /**
@@ -86,8 +78,9 @@ public class ImageUploadServletCtrl extends HttpServlet {
 
         //Get available images files and send to view for listing
         request.setAttribute("images", getImageFileNames());
-        //Pass to view public URL for uploaded images 
+        //Pass to view the public URL for uploaded images 
         request.setAttribute("imagesUrl", imagesUrl);
+        request.setAttribute("imagesPath", imagePath);
         
         RequestDispatcher rd=request.getRequestDispatcher(viewPath+"/send.jsp");
         rd.forward(request, response);
