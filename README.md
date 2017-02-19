@@ -12,4 +12,5 @@ Features:
 Installation instructions
 ----------------
 * Create a temporal directory on filesystem, by default /tmp/images, and update path in META-INF/context.xml file if needed.
-* Tomcat user must have read/write permissions in previous folder.
+* Change Servlet attribute *imagePath* with the path of the new temporal directory 
+* Tomcat user must have read/write permissions in directory.
