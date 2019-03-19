@@ -34,18 +34,16 @@ public class ImageUploadServletCtrl extends HttpServlet {
     private final String imagesUrl="/images";       //Images public URL 
                                                      
     private File imageFolder=null;
-    private Logger Log;
+    private static final Logger logger = Logger.getLogger(ImageUploadServletCtrl.class.getName());;
 
     @Override
     public void init() throws ServletException {
         super.init();
-        
-        Log = Logger.getLogger(ImageUploadServletCtrl.class.getName());
-                
+                        
         //Open upload folder
         imageFolder=new File(imagePath);
 
-        Log.log(Level.INFO, "Image upload path: {0}", imagePath);        
+        logger.log(Level.INFO, "Image upload path: {0}", imagePath);        
         
     }
     
@@ -107,7 +105,7 @@ public class ImageUploadServletCtrl extends HttpServlet {
             //Move temp file to web public folder
             try (InputStream input = filePart.getInputStream()) {
                 Files.copy(input, newFile.toPath());
-                Log.log(Level.INFO, "Uploaded file: {0}", fileName);
+                logger.log(Level.INFO, "Uploaded file: {0}", fileName);
 
             }
         }
