@@ -19,7 +19,8 @@ import javax.servlet.http.Part;
 
 /** Sample servlet for uploading files to server and show them
  *
- * @note Requires an images on filesystem for uploading and showing images (see context.xml)
+ * @note Requires an images folder on filesystem for uploading and showing images
+ * @see glassfish-web.xml for JEE server deployment or context.xml for Tomcat deployment)
  *
  * @author jrbalsas@ujaen.es
  */
@@ -30,7 +31,7 @@ public class ImageUploadServletCtrl extends HttpServlet {
     private final String viewPath="/WEB-INF/image/"; //Servlet templates folder
 
     //Images filesystem path and URL as defined in META-INF/context.xml
-    private final String imagePath="/tmp/images";   //enter the folder absolute path in server filesystem
+    private final String imagePath="/tmp/images";   //enter the folder absolute path in server filesystem e.g. c:/tmp/images
     private final String imagesUrl="/images";       //Images public URL 
                                                      
     private File imageFolder=null;

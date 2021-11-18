@@ -1,10 +1,12 @@
 package com.daw.fileupload;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -17,8 +19,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.Part;
 
-/**
- * @author jrbalsas
+/** Sample JSF controller for uploading files to server and show them
+ *
+ * @note Requires an images folder on filesystem for uploading and showing images
+ * @see glassfish-web.xml for JEE server deployment or context.xml for Tomcat deployment)
+ *
+ * @author jrbalsas@ujaen.es
  */
 @RequestScoped
 @Named ("imgCtrl")
@@ -30,11 +36,9 @@ public class ImageController implements Serializable{
     FacesContext fc;
             
     //Images filesystem path and URL as defined in /WEB-INF/glassfish-web.xml
-    private final String imagesPath="/tmp/images";   //enter the folder absolute path in server filesystem
+    private final String imagesPath="/tmp/images";   //enter the folder absolute path in server filesystem, e.g. c:/tmp/images
     private final String imagesUrl="/images";       //Images public URL 
-                                                       
-    private File imageFolder;
-    
+                                                          
     private  Part file;
 
     public ImageController() {
@@ -42,8 +46,6 @@ public class ImageController implements Serializable{
       
     @PostConstruct
     public void init() {
-    //Open upload folder
-        imageFolder=new File(imagesPath);
 
         logger.log(Level.INFO, "Image upload path: {0}", imagesPath);                
     }
@@ -72,8 +74,8 @@ public class ImageController implements Serializable{
 
             //Move temp file to web public folder
             try (InputStream input = file.getInputStream()) {
-                File destFile = new File(imageFolder, newFileName);
-                Files.copy(input, destFile.toPath());
+                Path destFile=Path.of(imagesPath,newFileName);
+                Files.copy(input, destFile);
                 fc.addMessage("", new FacesMessage(FacesMessage.SEVERITY_INFO,"Archivo enviado correctamente",""));
                 logger.log(Level.INFO, "Uploaded file: {0}", newFileName);
             } catch (IOException e) {
@@ -85,13 +87,16 @@ public class ImageController implements Serializable{
 
     /*Util methods*/
     
-    /** Get uploaded file names*/
-    public List<String> getImageFileNames() {
+    /**
+     * Get uploaded file names
+     */
+    public List<String> getImageFileNames() throws IOException {
         List<String> fileNames=new ArrayList<>();
-        File[] fList = imageFolder.listFiles();
-        for (File file : fList){
-            if (file.isFile()){
-                fileNames.add(file.getName());
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(imagesPath))) {
+            for (Path path : stream) {
+                if (!Files.isDirectory(path)) {
+                    fileNames.add( path.getFileName().toString() );
+                }
             }
         }
         return fileNames;
