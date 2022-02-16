@@ -12,8 +12,8 @@
      Change "dir" attribute with an absolute path in server filesystem for shared folders, e.g. /tmp/ or c:/temp/
      "from" attribute is the subfolder in dir folder which is shared relative to app URL Path, e.g. dawFileUpload/images
 -->  
-  <property name="alternatedocroot_1" value="dir=/tmp/ from=/images/*"/>
+  <property name="alternatedocroot_1" value="from=/images/* dir=/tmp "/>
 <!--
-  <property name="alternatedocroot_2" value="dir=/tmp/ from=/movies/*"/>
+  <property name="alternatedocroot_2" value="from=/movies/* dir=/tmp"/>
 -->
 </glassfish-web-app>
