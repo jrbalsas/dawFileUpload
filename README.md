@@ -1,7 +1,7 @@
 Sample Facelet and Servlet for uploading and show images
 ==========
 
-Sample JEE Maven project for uploading and sharing images or files in general to a persistent location
+Sample JakartaEE Maven project for uploading and sharing images or files in general to a persistent location
 
 Features:
 -------------
@@ -15,7 +15,7 @@ Usage instructions
 ----------------
 - Create folder on servlet filesystem to upload files, e.g. /tmp/images
 - Server must have read/write permissions on imagePath folder.
-- **Option 1** requires a Glassfish/Payara JEE Application Server. 
+- **Option 1** requires a Glassfish/Payara JakartaEE 10 Application Server. 
    - Filesystem destination path and public URL for files must be defined in ``/WEB-INF/glassfish-web.xml``
    - Change attributes ``imagePath`` and ``imageUrl`` with the path of the new temporal directory and public url on Serv
 - **Option 2** Just change image ``imagePath`` with created folder path  

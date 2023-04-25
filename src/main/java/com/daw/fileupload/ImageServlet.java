@@ -1,10 +1,10 @@
 package com.daw.fileupload;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -27,7 +27,7 @@ public class ImageServlet extends HttpServlet {
 
     // Init ---------------------------------------------------------------------------------------
 
-    public void init() throws ServletException {
+    public void init()  {
 
         // Define base path somehow. You can define it as init-param of the servlet.
         //this.imagePath = System.getProperty("user.home")+"/images";  //User home relative path
@@ -40,7 +40,7 @@ public class ImageServlet extends HttpServlet {
 
     // Actions ------------------------------------------------------------------------------------
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws  IOException {
 
         // Get requested image by path info.
         String requestedImage = request.getPathInfo();

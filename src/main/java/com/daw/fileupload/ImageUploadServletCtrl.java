@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 
 /** Sample servlet for uploading files to server and show them
  *
@@ -35,7 +35,7 @@ public class ImageUploadServletCtrl extends HttpServlet {
     private final String imagesUrl="/images";       //Images public URL 
                                                      
     private File imageFolder=null;
-    private static final Logger logger = Logger.getLogger(ImageUploadServletCtrl.class.getName());;
+    private static final Logger logger = Logger.getLogger(ImageUploadServletCtrl.class.getName());
 
     @Override
     public void init() throws ServletException {
@@ -57,8 +57,7 @@ public class ImageUploadServletCtrl extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=UTF-8");
     }
 

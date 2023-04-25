@@ -1,7 +1,7 @@
 
 package com.daw.fileupload;
 
-import javax.faces.annotation.FacesConfig;
+import jakarta.faces.annotation.FacesConfig;
 
 /**
  *
