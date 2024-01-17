@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -20,34 +21,39 @@ import jakarta.servlet.http.Part;
 /** Sample servlet for uploading files to server and show them
  *
  * @note Requires an images folder on filesystem for uploading and showing images
- * @see glassfish-web.xml for JEE server deployment or context.xml for Tomcat deployment)
  *
  * @author jrbalsas@ujaen.es
  */
-@WebServlet(name = "ImageUploadServletCtrl", urlPatterns = {"/image"})
+@WebServlet(name = "ImageUploadServletCtrl", urlPatterns = {"/images"})
 @MultipartConfig(maxFileSize = 1024*1024*5) //Max upload file size 5MB
 public class ImageUploadServletCtrl extends HttpServlet {
 
-    private final String viewPath="/WEB-INF/image/"; //Servlet templates folder
 
-    //Images filesystem path and URL as defined in META-INF/context.xml
-    private final String imagePath="/tmp/images";   //enter the folder absolute path in server filesystem e.g. c:/tmp/images
-    private final String imagesUrl="/images";       //Images public URL 
+    private final String viewPath="/WEB-INF/images/"; //Servlet templates folder
+
+    private String imagesPath; //images sub-folder in user home, e.g. /home/username/webimages
+    private String imagesUrl ="imagen";  //Images public URL (servlet url), e.g. /imagen
                                                      
-    private File imageFolder=null;
+    private File imagesFolder=null;
     private static final Logger logger = Logger.getLogger(ImageUploadServletCtrl.class.getName());
 
     @Override
     public void init() throws ServletException {
         super.init();
-                        
-        //Open upload folder
-        imageFolder=new File(imagePath);
 
-        logger.log(Level.INFO, "Image upload path: {0}", imagePath);        
-        
+        //get images folder path from web.xml
+        imagesPath=getServletContext().getInitParameter("imagesPath");
+        //create images folder if not exists
+        AppConfig.initFolder(imagesPath);
+
+        logger.log(Level.INFO, "Image upload path: {0}", imagesPath);
+
+        //Open upload folder
+        imagesFolder=new File(imagesPath);
+
+
     }
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -57,7 +63,8 @@ public class ImageUploadServletCtrl extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
     }
 
@@ -78,7 +85,7 @@ public class ImageUploadServletCtrl extends HttpServlet {
         request.setAttribute("images", getImageFileNames());
         //Pass to view the public URL for uploaded images 
         request.setAttribute("imagesUrl", imagesUrl);
-        request.setAttribute("imagesPath", imagePath);
+        request.setAttribute("imagesPath", imagesPath);
         
         RequestDispatcher rd=request.getRequestDispatcher(viewPath+"/send.jsp");
         rd.forward(request, response);
@@ -100,7 +107,7 @@ public class ImageUploadServletCtrl extends HttpServlet {
         Part filePart = request.getPart("fileParam"); // Retrieves <input type="file" name="fileParam">
         if (filePart!=null) {  
             String fileName = filePart.getSubmittedFileName();
-            File newFile = new File(imageFolder, fileName);
+            File newFile = new File(imagesFolder, fileName);
 
             //Move temp file to web public folder
             try (InputStream input = filePart.getInputStream()) {
@@ -109,13 +116,13 @@ public class ImageUploadServletCtrl extends HttpServlet {
 
             }
         }
-        response.sendRedirect("image");
+        response.sendRedirect("images");
     }
 
     /** Get uploaded file names*/
     private List<String> getImageFileNames() {
         List<String> fileNames=new ArrayList<>();
-        File[] fList = imageFolder.listFiles();
+        File[] fList = imagesFolder.listFiles();
         for (File file : fList){
             if (file.isFile()){
                 fileNames.add(file.getName());

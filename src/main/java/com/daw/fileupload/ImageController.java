@@ -22,7 +22,6 @@ import jakarta.servlet.http.Part;
 /** Sample JSF controller for uploading files to server and show them
  *
  * @note Requires an images folder on filesystem for uploading and showing images
- * @see glassfish-web.xml for JEE server deployment or context.xml for Tomcat deployment)
  *
  * @author jrbalsas@ujaen.es
  */
@@ -34,10 +33,9 @@ public class ImageController implements Serializable{
     
     @Inject
     FacesContext fc;
-            
-    //Images filesystem path and URL as defined in /WEB-INF/glassfish-web.xml
-    private final String imagesPath="/tmp/images";   //enter the folder absolute path in server filesystem, e.g. c:/tmp/images
-    private final String imagesUrl="/images";       //Images public URL 
+
+    private String imagesPath; //folder absolute path in server filesystem for images, e.g. c:/tmp/images
+    private final String imagesUrl="imagen";      //Images public prefix URL (servlet url), e.g. http://localhost:8080/app/imagen...
                                                           
     private  Part file;
 
@@ -46,6 +44,10 @@ public class ImageController implements Serializable{
       
     @PostConstruct
     public void init() {
+        //get images folder path from web.xml
+        imagesPath=fc.getExternalContext().getInitParameter("imagesPath");
+        //create images folder if not exists
+        AppConfig.initFolder(imagesPath);
 
         logger.log(Level.INFO, "Image upload path: {0}", imagesPath);                
     }

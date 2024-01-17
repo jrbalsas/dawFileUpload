@@ -21,26 +21,27 @@ public class ImageServlet extends HttpServlet {
 
     // Properties ---------------------------------------------------------------------------------
 
-    private String imagePath;
+    private String imagesPath;
 
     static final Logger log= Logger.getLogger(ImageServlet.class.getName());
 
-    // Init ---------------------------------------------------------------------------------------
+    @Override
+    public void init() throws ServletException {
 
-    public void init()  {
-
-        // Define base path somehow. You can define it as init-param of the servlet.
+        // Define base path somehow. Samples:
+        //this.imagePath = "/tmp/images";  //Server absolute path, e.g. c:/tmp/images (windows)
         //this.imagePath = System.getProperty("user.home")+"/images";  //User home relative path
-        this.imagePath = "/tmp/images";  //Server absolute path, e.g. c:/tmp/images (windows)
+        //get images folder path from web.xml
+        this.imagesPath=getServletContext().getInitParameter("imagesPath"); //sub-folder in user home, e.g. /home/username/webimages
+        //create images folder if not exists
+        AppConfig.initFolder(imagesPath);
 
-        // In a Windows environment with the Applicationserver running on the
-        // c: volume, the above path is exactly the same as "c:\var\webapp\images".
-        // In Linux/Mac/UNIX, it is just straightforward "/var/webapp/images".
     }
 
     // Actions ------------------------------------------------------------------------------------
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws  IOException {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         // Get requested image by path info.
         String requestedImage = request.getPathInfo();
@@ -54,15 +55,20 @@ public class ImageServlet extends HttpServlet {
         }
 
         // Decode the file name (might contain spaces and on) and prepare file object.
-        File image = new File(imagePath, URLDecoder.decode(requestedImage, "UTF-8"));
+        File image = new File(imagesPath, URLDecoder.decode(requestedImage, "UTF-8"));
 
         // Check if file actually exists in filesystem.
         if (!image.exists()) {
             // Do your thing if the file appears to be non-existing.
             // Throw an exception, or send 404, or show default/warning image, or just ignore it.
-            response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
-            log.warning(String.format("File %s not found", image.getName()));
-            return;
+
+            //response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+            //log.warning(String.format("File %s not found", image.getName()));
+            //return;
+
+            //If file not exists, send default image (webapp/img/default.png)
+            imagesPath=getServletContext().getRealPath("/img/");
+            image = new File(imagesPath, "default.png");
         }
 
         // Get content type by filename.

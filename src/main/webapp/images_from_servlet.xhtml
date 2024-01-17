@@ -1,4 +1,3 @@
-<?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html>
 <html xmlns:h="jakarta.faces.html"
       xmlns:ui="jakarta.faces.facelets">
@@ -7,19 +6,19 @@
     </h:head>
     <h:body>
         <h1>Upload file facelet</h1>
-        <p>(Option 2) Access images from Servlet /imagen</p>
+        <p>(Option 1 recommended) Access images from Servlet /imagen</p>
 
         <h:form enctype="multipart/form-data"  >
             <h:inputFile value="#{imgCtrl.file}"/>                
 
             <h:commandButton action="#{imgCtrl.sendFile}" value="Send"/>
         </h:form>
-        <h2>Available images in Folder ${imgCtrl.imagesPath}</h2>
+        <h2>Available images in Folder #{imgCtrl.imagesPath}</h2>
 
         <ui:repeat var="imageName" value="#{imgCtrl.imageFileNames}" >
-            <p>Url: #{request.contextPath}/imagen/#{imageName}</p>
+            <p>Url: #{request.contextPath}/#{imgCtrl.imagesUrl}/#{imageName}</p>
             <!-- Download image from Servlet url /imagen/ e.g. /imagen/test.jpg -->
-            <h:graphicImage alt="${imageName}" value="/imagen/#{imageName}"/>
+            <h:graphicImage alt="${imageName}" value="/#{imgCtrl.imagesUrl}/#{imageName}"/>
 
         </ui:repeat>
         <footer>
