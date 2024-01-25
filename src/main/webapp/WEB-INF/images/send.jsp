@@ -17,7 +17,7 @@
             <input type="file" name="fileParam">
             <input type="submit" name="Send">
         </form>
-        <h2>Available images in Folder ${imagesPath}</h2>
+        <h2>Available images in Folder ${initParam["imagesPath"]} </h2>
 
         <c:forEach var="imageName" items="${images}" >
             <p>Url: <c:url value='${imagesUrl}/${imageName}'/></p>

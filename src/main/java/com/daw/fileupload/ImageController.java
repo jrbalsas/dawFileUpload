@@ -58,10 +58,6 @@ public class ImageController implements Serializable{
         return imagesUrl;
     }
 
-    public String getImagesPath() {
-        return imagesPath;
-    }
-
     public Part getFile() {
         return file;
     }

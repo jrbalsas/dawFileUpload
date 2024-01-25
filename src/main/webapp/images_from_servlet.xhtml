@@ -13,7 +13,7 @@
 
             <h:commandButton action="#{imgCtrl.sendFile}" value="Send"/>
         </h:form>
-        <h2>Available images in Folder #{imgCtrl.imagesPath}</h2>
+        <h2>Available images in Folder #{initParam["imagesPath"]} </h2>
 
         <ui:repeat var="imageName" value="#{imgCtrl.imageFileNames}" >
             <p>Url: #{request.contextPath}/#{imgCtrl.imagesUrl}/#{imageName}</p>

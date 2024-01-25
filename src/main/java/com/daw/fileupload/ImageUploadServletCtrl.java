@@ -85,7 +85,6 @@ public class ImageUploadServletCtrl extends HttpServlet {
         request.setAttribute("images", getImageFileNames());
         //Pass to view the public URL for uploaded images 
         request.setAttribute("imagesUrl", imagesUrl);
-        request.setAttribute("imagesPath", imagesPath);
         
         RequestDispatcher rd=request.getRequestDispatcher(viewPath+"/send.jsp");
         rd.forward(request, response);
